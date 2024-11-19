@@ -13,7 +13,6 @@ exports.register = async (req, res, next) => {
         
     }
     try {
-     
         const newUser = new myMd.userModel({
             username,
             email,
@@ -102,8 +101,6 @@ exports.addToCart = async (req,res) => {
         if(!user){
             console.log("User not found");
         }
-
-
         if(!user){
             console.log("User not found");
         };
