@@ -18,6 +18,7 @@ const userController = require('../controller/user.controller');
  router.post('/deleteU/:idU', userController.deleteUser);
 
 
+ HEAD
 //controller product
 router.get('/listproducts', productController.getProduct);
 router.post('/addProduct', upload.single('imageproduct'), productController.addProduct);
@@ -31,6 +32,9 @@ router.post('/addCat', upload.single("imageCat"), productController.addCat);
   router.get('/getProduct', productAppi.getProduct);
   router.get('/getCat', productAppi.getCat);
   router.post('/getProByCat', productAppi.getProductByCat);
+
+
+
 
 
 
