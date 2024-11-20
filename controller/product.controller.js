@@ -77,6 +77,7 @@ exports.addProduct = async(req, res, next) => {
     res.redirect("/listproducts");
 };
 
+// xoá sp
 exports.deleteProduct = async (req,res) => {
     const idP = req.params.idP;
     try {
@@ -88,6 +89,7 @@ exports.deleteProduct = async (req,res) => {
     }
 };
 
+// tìm kiếm sp
 exports.findProduct = async(req,res) => {
     try {
         const productname = req.body.productname;
@@ -104,6 +106,7 @@ exports.findProduct = async(req,res) => {
     }
 };
 
+// update sp
 exports.updateProduct = async (req, res) => {
     try {
         const { productname, price, description, category } = req.body;
@@ -120,13 +123,6 @@ exports.updateProduct = async (req, res) => {
             image = "../public/templates/" + originalName;
         }
 
-        // const updatedFields = {
-        //     productname,
-        //     price,
-        //     description,
-        //     category,
-        //     imageproduct:image,
-        // };
 
         const product =  await myMd.prodcuctModel.findById(productId);
         console.log("product ==== " +product);

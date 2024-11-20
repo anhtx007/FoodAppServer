@@ -1,5 +1,6 @@
 const myMd = require('../model/product');
 
+// thêm sp
 exports.addProduct = async(req,res,next) => {
  try {
     const {productname,description,price,imageproduct} = req.body;
