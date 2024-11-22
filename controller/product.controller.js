@@ -89,22 +89,6 @@ exports.deleteProduct = async (req,res) => {
     }
 };
 
-// tìm kiếm sp
-exports.findProduct = async(req,res) => {
-    try {
-        const productname = req.body.productname;
-        const searchCondition = {};
-        if(productname){
-            searchCondition.productname = productname;
-        }
-
-        const product = await myMd.prodcuctModel.find(searchCondition);
-        res.status(200).json(product);
-        console.log("Kết quả tìm kiếm : " +product);
-    } catch (error) {
-        console.log("Đã có lỗi khi xử lý yêu cầu tìm kiếm của bạn " ,error);
-    }
-};
 
 // update sp
 exports.updateProduct = async (req, res) => {
@@ -122,7 +106,6 @@ exports.updateProduct = async (req, res) => {
 
             image = "../public/templates/" + originalName;
         }
-
 
         const product =  await myMd.prodcuctModel.findById(productId);
         console.log("product ==== " +product);
