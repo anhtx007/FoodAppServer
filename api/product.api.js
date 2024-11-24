@@ -50,9 +50,9 @@ exports.findProduct = async(req,res) => {
     }
 };
 
+// chi tiết thông tin sp
 exports.getInfoProdut = async (req,res) => {
     const {productId} = req.body;
-
     const product = await myMd.prodcuctModel.findById(productId);
     if(!product){
         console.log("Product not found");
@@ -60,7 +60,7 @@ exports.getInfoProdut = async (req,res) => {
     console.log("Thông tin sản phẩm : "+product);
     res.status(200).json(product);
 }
-
+//
 exports.getCat = async (req,res) => {
     try {
         const cat = await myMd.categoryModel.find();
