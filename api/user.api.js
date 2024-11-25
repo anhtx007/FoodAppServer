@@ -125,9 +125,91 @@ exports.getAddress = async (req, res) => {
 // lấy danh sách yêu thích
 
 // lấy sản phẩm thêm giỏ hàng
+exports.addCart = async (req, res) => {
+    try {
+        const { productId, quantity, price, total_order } = req.body;
+        const userId = req.body.userId;
+
+        const user = await myMd.userModel.findById(userId);
+        if (!user) {
+            console.log("User not found");
+        }
+        if (!user.cart) {
+            user.cart = [];
+        }
+
+        const existingProductIndex = user.cart.findIndex(item => item.productId.toString() === productId);
+        if (existingProductIndex !== -1) {
+            // Nếu sản phẩm đã tồn tại trong giỏ hàng, cộng dồn thêm quantity và totalOrder
+            user.cart[existingProductIndex].quantity += quantity;
+            user.cart[existingProductIndex].total_order += total_order;
+        } else {
+            // Nếu sản phẩm chưa tồn tại trong giỏ hàng, thêm mới vào giỏ hàng
+            user.cart.push({ productId: productId, price: price, total_order: total_order, quantity: quantity });
+
+        }
+        user.save();
+        console.log("cart : " + user.cart);
+        res.json(user.cart);
+    } catch (error) {
+        console.log("Đã có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng :" + error);
+    }
+}
 
 // check id người dùng giỏ hàng theo id 
 
+exports.getCart = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await myMd.userModel.findById(userId).populate('cart.productId');
+        if (!user) {
+            res.status(404).json({ message: "Người dùng không tồn tại" });
+        }
+        const cartWithInfoProduct = [];
+        for (const item of user.cart) {
+            const product = await myMdPro.prodcuctModel.findById(item.productId);
+            if (product) {
+                cartWithInfoProduct.push({
+                    productId: product._id,
+                    productname: product.productname,
+                    price: product.price,
+                    imageproduct: product.imageproduct,
+                    quantity: item.quantity,
+                    total_order: item.total_order,
+                });
+            }
+        }
+
+        res.json(cartWithInfoProduct);
+    } catch (error) {
+        console.log("Đã có lỗi xảy ra khi lấy thông tin giỏ hàng : " + error);
+    }
+}
+
+exports.upDateCart = async (req, res) => {
+    try {
+        const { userId, cartId, quantity } = req.body;
+
+        const user = await myMd.userModel.findById(userId);
+        if (!user) {
+            console.log("User not found");
+
+        }
+
+        const cartItem = user.cart.id(cartId);
+        console.log(cartItem);
+        if (!cartItem) {
+            console.log("Cart not found");
+
+        }
+
+        cartItem.quantity = quantity;
+        await user.save();
+        console.log("Cập nhật thành công");
+    } catch (error) {
+        console.log("Lỗi cập nhật : " + error.message);
+    }
+}
 exports.ChangePassword = async (req, res) => {
     try {
         const { email, password, newpassword, confirmpassword } = req.body;

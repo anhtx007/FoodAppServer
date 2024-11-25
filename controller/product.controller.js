@@ -2,7 +2,7 @@ const myMd = require('../model/product');
 const fs = require('fs');
 const path = require('path');
 
-
+// thêm danh mục thể loại
 exports.addCat = async (req, res, next) => {
     try {
         const {category} = req.body;
@@ -31,7 +31,7 @@ exports.addCat = async (req, res, next) => {
 };
 
 
-
+// danh sách sp người dùng
 exports.getProduct = async(req,res,next) => {
     try {
         const products = await myMd.prodcuctModel.find();
@@ -73,7 +73,6 @@ exports.addProduct = async(req, res, next) => {
         console.log("Đã có lỗi sảy ra khi thêm sản phẩm mới : " +error);
     }     
     
-
     res.redirect("/listproducts");
 };
 
@@ -90,6 +89,7 @@ exports.deleteProduct = async (req,res) => {
 };
 
 // tìm kiếm sp
+// đang error!!!
 exports.findProduct = async(req,res) => {
     try {
         const productname = req.body.productname;
@@ -97,7 +97,6 @@ exports.findProduct = async(req,res) => {
         if(productname){
             searchCondition.productname = productname;
         }
-
         const product = await myMd.prodcuctModel.find(searchCondition);
         res.status(200).json(product);
         console.log("Kết quả tìm kiếm : " +product);
@@ -124,7 +123,7 @@ exports.updateProduct = async (req, res) => {
         }
         
         const product =  await myMd.prodcuctModel.findById(productId);
-        console.log("product ==== " +product);
+        console.log("product ==== " + product);
         product.productname = productname;
         product.price = price;
         product.imageproduct = imageproduct;
