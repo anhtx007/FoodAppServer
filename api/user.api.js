@@ -123,6 +123,66 @@ exports.getAddress = async (req, res) => {
 }
 
 // lấy danh sách yêu thích
+exports.addToWithList = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const productId = req.body.productId;
+
+        const product = await myMdPro.prodcuctModel.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Sản phẩm không tồn tại" });
+        }
+
+        const user = await myMd.userModel.findOne({ _id: userId });
+
+        const isProductInWishlist = user.wishlist.some(item => item.toString() === productId);
+
+        let updatedUser;
+        if (isProductInWishlist) {
+            updatedUser = await myMd.userModel.findByIdAndUpdate(
+                { _id: userId },
+                { $pull: { wishlist: productId } },
+                { new: true }
+            );
+        } else {
+            updatedUser = await myMd.userModel.findByIdAndUpdate(
+                { _id: userId },
+                { $push: { wishlist: productId } },
+                { new: true }
+            );
+        }
+
+        res.json(updatedUser);
+    } catch (error) {
+        console.log("Đã xảy ra lỗi khi thêm sản phẩm vào danh sách mong muốn : " + error);
+        res.status(500).json({ error: "Đã xảy ra lỗi khi thêm sản phẩm vào danh sách mong muốn" });
+    }
+};
+
+exports.getWithList = async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const user = await myMd.userModel.findOne({ _id: userId });
+
+        if (!user) {
+            return res.status(404).json({ message: "Người dùng không tồn tại" });
+        }
+
+        const withlist = user.wishlist;
+        const fullwithlist = [];
+        for (const productId of withlist) {
+            const product = await myMdPro.prodcuctModel.findById({ _id: productId });
+            if (product) {
+                fullwithlist.push(product);
+            }
+        }
+        console.log("Thông tin sản phẩm : " + fullwithlist);
+        res.status(200).json(fullwithlist);
+    } catch (error) {
+        console.log("Không thể lấy được danh sách yêu thích của người dùng : " + error);
+    }
+};
+
 
 // lấy sản phẩm thêm giỏ hàng
 exports.addCart = async (req, res) => {
