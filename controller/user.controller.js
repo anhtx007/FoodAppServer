@@ -24,7 +24,7 @@ exports.register = async (req, res, next) => {
         
         });
         await newUser.save();
-        msg = "Đăng ký người dùng thành công";
+        msg = "";
 
     } catch (error) {
         console.log("Đã xảy ra lỗi khi xử lý yêu cầu của bạn! : " + error);

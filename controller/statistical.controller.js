@@ -63,28 +63,28 @@ exports.getTotal = async (req, res) => {
 }
 
 
-exports.mostBoughtProduct = async (req,res) => {
-    try {
-        const mostBoughtProduct = await myMdO.oderModel.aggregate([
-            {
-                $match:{status:"delivered"}
-            },
-            {
-                $unwind:"$items"
-            },{
-                $group:{
-                    _id:"$items.productname",
-                    totalQuantity:{$sum:"$items.quantity"}
-                }
-            },{
-                $sort:{totalQuantity : -1}
-            },{
-                $limit:10
-            }
-        ]);
-        console.log(mostBoughtProduct);
-        res.render('../views/statistical/top10.ejs',{mostBoughtProduct:mostBoughtProduct});
-    } catch (error) {
-        console.log("Đã có lỗi : "+error);
-    }
-}
+// exports.mostBoughtProduct = async (req,res) => {
+//     try {
+//         const mostBoughtProduct = await myMdO.oderModel.aggregate([
+//             {
+//                 $match:{status:"delivered"}
+//             },
+//             {
+//                 $unwind:"$items"
+//             },{
+//                 $group:{
+//                     _id:"$items.productname",
+//                     totalQuantity:{$sum:"$items.quantity"}
+//                 }
+//             },{
+//                 $sort:{totalQuantity : -1}
+//             },{
+//                 $limit:10
+//             }
+//         ]);
+//         console.log(mostBoughtProduct);
+//         res.render('../views/statistical/top10.ejs',{mostBoughtProduct:mostBoughtProduct});
+//     } catch (error) {
+//         console.log("Đã có lỗi : "+error);
+//     }
+// }

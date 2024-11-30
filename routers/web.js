@@ -85,7 +85,6 @@ const initRouter = (app) => {
 
 
     //THỐNG KÊ
-    router.get('/top10', statisticalControll.mostBoughtProduct);
     router.get('/revenue',statisticalControll.getTotalRevenueByMonth);
     router.post('/totalRevenue',statisticalControll.getTotal);
     router.get('/totalRevenue',statisticalControll.getTotal);
