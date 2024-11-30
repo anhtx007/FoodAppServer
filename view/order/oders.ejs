@@ -1,0 +1,94 @@
+<%- include('../inc/header.ejs') %>
+
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+            <div class="container mt-5">
+                <h1 class="mb-4">Danh sách đơn hàng</h1>
+        
+                <!-- Menu ngang dưới tiêu đề -->
+                <nav>
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/getOrder">Chờ xác nhận</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/getPreparing">Đang chuẩn bị hàng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/getAreDelivering">Đang giao</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/getDelived">Đã giao</a>
+                        </li>
+                        <!-- Thêm các mục menu khác cần thiết -->
+                    </ul>
+                </nav>
+        
+                <div class="row">
+                    <% oders.forEach(function(order) { %>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="card-title">Người đặt hàng: <%= order.username %></h6>
+                                    <p class="card-text">Tổng tiền: $<%= order.total %></p>
+                                    <p class="card-text">Ngày đặt hàng: <%= new Date(order.oderDate).toLocaleDateString() %></p>
+                                    <p class="card-text">Địa chỉ: <%= order.address %></p>
+                                    <p class="card-text">Phương thức thanh toán : <%= order.payment_method %></p>
+                                    <div class="d-flex justify-content-between">
+                                        <div class="btn-group" role="group">
+                                            <!-- Sử dụng flexbox để căn chỉnh ngang hàng -->
+                                            <form action="/updateStatus/<%= order._id %>" method="post">
+                                                <button class="btn btn-warning mr-3">
+                                                    <%= order.status %>
+                                                </button>
+                                            </form>
+                                            <form action="/deleteOrder/<%= order._id %>" method="post">
+                                                <button class="btn btn-danger">
+                                                    Từ chối
+                                                </button>
+                                            </form>
+                                        </div>
+                                        <!-- Button mở modal -->
+                                        <button class="btn-primary" data-toggle="modal" data-target="#orderDetailModal_<%= order._id %>">Chi tiết đơn hàng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="orderDetailModal_<%= order._id %>" tabindex="-1" role="dialog" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="orderDetailModalLabel">Chi tiết đơn hàng</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Hiển thị thông tin sản phẩm -->
+                                        <% order.items.forEach(function(item) { %>
+                                            <div class="item">
+                                                <h6>Tên sản phẩm: <%= item.productname %></h6>
+                                                <p>Số lượng: <%= item.quantity %></p>
+                                                <p>Giá: <%= item.price %></p>
+                                            </div>
+                                        <% }); %>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        </main>
+        
+    </div>
+</div>
+
+<script>
+    function formatMoney(price){
+        return new Intl.NumberFormat('vi-VN',{style:'currency',currency:'VNĐ'}).format(price);
+    }
+</script>
+
+<%- include('../inc/footer.ejs') %>

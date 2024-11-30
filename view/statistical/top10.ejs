@@ -1,0 +1,74 @@
+<%- include('../inc/header.ejs') %>
+<style>
+    /* Định kích thước của canvas bằng CSS */
+    .chart {
+        width: 100px; /* Đặt kích thước theo ý muốn */
+        height: 50px;
+    }
+</style>
+<div class="col-md-10 ml-sm-auto">
+    <div class="container mt-5">
+        <h3>Top 10 sản phẩm bán chạy</h3>
+        <div class="d-flex justify-content-between align-items-center mb-10">
+            <canvas id="myChart" class="chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    var labels = [];
+    var data = [];
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Dữ liệu từ server
+        var mostBoughtProduct = JSON.parse('<%- JSON.stringify(mostBoughtProduct) %>');
+        
+        // Tạo mảng chứa tên sản phẩm và số lượng bán
+        mostBoughtProduct.forEach(function(item) {
+            labels.push(item._id);
+            data.push(item.totalQuantity);
+        });
+
+        // Lấy ngữ cảnh vẽ
+        var ctx = document.getElementById('myChart').getContext('2d');
+
+        // Tạo dữ liệu cho biểu đồ
+        var chartData = {
+            labels: labels,
+            datasets: [{
+                label: 'Số lượng bán',
+                data: data,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        var options = {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 8
+                    }
+                }]
+            },
+            legend: {
+                display: true,
+                labels: {
+                    fontSize: 8
+                }
+            }
+        };
+
+        // Khởi tạo biểu đồ
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: options
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<%- include('../inc/footer.ejs') %>
